@@ -1,4 +1,3 @@
-import json
 from flask import Flask, jsonify, request, abort
 app = Flask(__name__)
 
@@ -19,17 +18,19 @@ def add_user():
     data.append(req_data)
     return jsonify(data)
 
-@app.route('/users/<int:id>', methods=['DELETE'])
-def del_user(id):
-    del_data = data[id]
-    data.pop(del_data)
-    return jsonify({'result': True})
+@app.route('/users', methods=['DELETE'])
+def del_user():
+    for user in data:
+        if user['id'] == request.get_json()['id']:
+            data.remove(user)
+    return jsonify(data)
 
-@app.route('/users/<int:id>', methods=['PUT'])
+@app.route('/users', methods=['PUT'])
 def update_user():
-    data.filter(data['id'] == request.json.get('id'))
-    data[0]['name'] = request.json.get('name')
-    data[0]['surname'] = request.json.get('surname')
+    for user in data:
+        if user['id'] == request.get_json()['id']:
+            user['name'] = request.get_json()['name'],
+            user['surname'] = request.get_json()['surname']
     return jsonify(data)
 
 
