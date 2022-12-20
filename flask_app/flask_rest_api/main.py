@@ -1,39 +1,56 @@
-from flask import Flask, jsonify, request, abort
+import psycopg2
+from flask import Flask, jsonify, request, render_template
+
 app = Flask(__name__)
 
-data = [{'id': '0', 'name': 'Alex', 'surname': 'Turner'},
-        {'id': '1', 'name': 'Thom', 'surname': 'Yorke'}]
+conn = psycopg2.connect(
+    host="localhost",
+    database="postgres",
+    user="postgres",
+    password="123"
+)
+cursor = conn.cursor()
 
-@app.route('/users', methods=['GET'])
+success_message = {'success': True}
+
+@app.route('/users/', methods=['GET'])
 def get_users():
-    return jsonify(data)
+    sql = 'SELECT * FROM main;'
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    print(data)
+    return data
 
-@app.route('/users', methods=['POST'])
+@app.route('/users/<userid>', methods=['GET'])
+def get_user(userid):
+    sql = 'SELECT * FROM main WHERE main_id = %s'
+    cursor.execute(sql, (str(userid),) )
+    data = cursor.fetchall()
+    print(data)
+    return data
+
+@app.route('/users/', methods=['POST'])
 def add_user():
-    req_data = {
-        'id': int(data[-1]['id']) + 1,
-        'name': request.json['name'],
-        'surname': request.json['surname']
-    }
-    data.append(req_data)
-    return jsonify(data)
+    sql = 'INSERT INTO main (name, surname, telephone) VALUES (%s, %s, %s)'
+    name = request.json['name']
+    surname = request.json['surname']
+    tel = request.json['tel']
+    cursor.execute(sql, (name, surname, tel))
 
-@app.route('/users', methods=['DELETE'])
-def del_user():
-    for user in data:
-        if user['id'] == request.get_json()['id']:
-            data.remove(user)
-    return jsonify(data)
+@app.route('/users/<userid>', methods=['DELETE'])
+def del_user(userid):
+    sql = 'DELETE FROM main WHERE main_id = %s'
+    cursor.execute(sql, (str(userid),))
+    data = cursor.fetchall()
 
-@app.route('/users', methods=['PUT'])
-def update_user():
-    for user in data:
-        if user['id'] == request.get_json()['id']:
-            user['name'] = request.get_json()['name'],
-            user['surname'] = request.get_json()['surname']
-    return jsonify(data)
+@app.route('/users/<userid>', methods=['PUT'])
+def update_user(userid):
+    sql = 'UPDATE main SET name = %s, surname = %s, telephone = %s WHERE main_id = %s'
+    name = request.json['name']
+    surname = request.json['surname']
+    tel = request.json['tel']
+    cursor.execute(sql, (name, surname, tel, str(userid)))
 
 
 if __name__ == '__main__':
     app.run(debug=True)
-
