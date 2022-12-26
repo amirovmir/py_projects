@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phone directory</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
+</head>
+<body>
+    <h1 class="main-title">
+        Telephone book
+    </h1>
+    {% block content %}
+    <table>
+        <td>
+            <p>
+                The database stores information about users, their name, surname, telephone number.
+                Users have their own id.
+            </p>
+
+            <td>
+                <img src="/static/img/tel.jpg" alt="telephone">
+            </td>
+        </td>
+    </table>
+    <form method="get" action="/users">
+        <button id="open-base">Get users tel numbers</button>
+    </form>
+    {% endblock %}
+</body>
+</html>

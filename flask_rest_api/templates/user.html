@@ -1,0 +1,38 @@
+<DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
+</head>
+<body>
+    <h1>
+        Database of users
+    </h1>
+    <table>
+        <td>
+            <p style="font-size: 25px; padding: 0 60px">
+                User id (users): {{ users['id'] }}<br>
+                Name: {{ users['name'] }}<br>
+                Surname: {{ users['surname'] }}<br>
+                Phone number: {{ users['telephone'] }}<br>
+            </p>
+        </td>
+    </table>
+    <br>
+    <table>
+        <tr>
+        <td width="90%">
+    <form action="/users/{{users['id']}}" method="get">
+        <button class="my-bt">View User</button>
+    </form>
+        </td>
+        <td >
+    <form action="/users" method="get">
+        <button class="my-bt">Back to all users</button>
+    </form>
+        </td>
+        </tr>
+    </table>
+</body>
+</html>

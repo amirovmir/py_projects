@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
+<h3 class="my-title">Users</h3>
+<table class="my-table">
+  <tr>
+    <th> Id </th>
+    <th> Name </th>
+    <th> Surname </th>
+    <th> Telephone </th>
+  </tr>
+  {% for user in users %}
+  <tr id="tr-users">
+    {% for data in user.values() %}
+      <td>
+          {{ data }}
+      </td>
+    {% endfor %}
+      <td>
+            <form action="/users/{{user['id']}}" method="get">
+                <button id="bt-view">Select</button>
+            </form>
+      </td>
+  </tr>
+  {% endfor %}
+</table>
+ {% endblock %}
